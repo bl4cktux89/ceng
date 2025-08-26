@@ -1,0 +1,18 @@
+# Etapa 1: Compilação
+FROM openjdk:8-jdk-alpine AS build
+
+WORKDIR /app
+
+COPY HelloWorld.java .
+
+RUN javac HelloWorld.java
+RUN jar cfe HelloWorld.jar HelloWorld HelloWorld.class
+
+# Etapa 2: Execução
+FROM openjdk:8-jre-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/HelloWorld.jar .
+
+CMD ["java", "-jar", "HelloWorld.jar"]

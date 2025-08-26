@@ -1,0 +1,18 @@
+# Etapa 1: Compilação
+FROM openjdk:8-jdk-alpine AS build
+
+WORKDIR /app
+
+COPY Addition.java .
+
+RUN javac Addition.java
+RUN jar cfe Addition.jar Addition Addition.class
+
+# Etapa 2: Execução
+FROM openjdk:8-jre-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/Addition.jar .
+
+CMD ["java", "-jar", "Addition.jar"]
