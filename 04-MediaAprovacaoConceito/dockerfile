@@ -1,0 +1,18 @@
+# Etapa 1: Compilação
+FROM openjdk:8-jdk-alpine AS build
+
+WORKDIR /app
+
+COPY MediaAprovacaoConceito.java .
+
+RUN javac MediaAprovacaoConceito.java
+RUN jar cfe MediaAprovacaoConceito.jar MediaAprovacaoConceito MediaAprovacaoConceito.class
+
+# Etapa 2: Execução
+FROM openjdk:8-jre-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/MediaAprovacaoConceito.jar .
+
+CMD ["java", "-jar", "MediaAprovacaoConceito.jar"]

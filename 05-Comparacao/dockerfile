@@ -1,0 +1,18 @@
+# Etapa 1: Compilação
+FROM openjdk:8-jdk-alpine AS build
+
+WORKDIR /app
+
+COPY Comparacao.java .
+
+RUN javac Comparacao.java
+RUN jar cfe Comparacao.jar Comparacao Comparacao.class
+
+# Etapa 2: Execução
+FROM openjdk:8-jre-alpine
+
+WORKDIR /app
+
+COPY --from=build /app/Comparacao.jar .
+
+CMD ["java", "-jar", "Comparacao.jar"]
